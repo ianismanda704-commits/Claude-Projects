@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Generator - Create Expert-Level Prompts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .copy-btn {
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background-color: #5a67d8;
+        }
+        
+        .phase-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-4">AI Prompt Generator</h1>
+            <p class="text-xl opacity-90">Create verified, low-hallucination prompts that deliver accurate results</p>
+            <p class="text-lg opacity-75 mt-2">Using meta-prompting with expert coordination and fact-checking</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        
+        <!-- Method Selection -->
+        <section id="methodSection" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Choose Your Prompt Creation Method</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                
+                <!-- Option 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover cursor-pointer border-2 border-transparent hover:border-purple-500" onclick="selectMethod('detailed')">
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">📝</span>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Write Detailed Instructions</h3>
+                            <p class="text-gray-600">Go as detailed as possible - eliminate all guesswork and personalize every aspect of the output.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-600 font-medium">Best for: Custom, personalized results</div>
+                </div>
+
+                <!-- Option 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover cursor-pointer border-2 border-transparent hover:border-purple-500" onclick="selectMethod('guide')">
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">🤖</span>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Ask AI to Create a Guide</h3>
+                            <p class="text-gray-600">Let AI detail what you need to do, then refine it into specific instructions.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-600 font-medium">Best for: Well-known topics</div>
+                </div>
+
+                <!-- Option 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover cursor-pointer border-2 border-transparent hover:border-purple-500" onclick="selectMethod('expert')">
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">📚</span>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Use Expert Source</h3>
+                            <p class="text-gray-600">Provide expert information and AI becomes an expert on that topic.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-600 font-medium">Best for: Specialized knowledge</div>
+                </div>
+
+                <!-- Option 4 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover cursor-pointer border-2 border-transparent hover:border-purple-500" onclick="selectMethod('emulate')">
+                    <div class="flex items-start mb-4">
+                        <span class="text-3xl mr-3">🎯</span>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Emulate an Example</h3>
+                            <p class="text-gray-600">Find an example you like, break it down, and replicate its structure.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-600 font-medium">Best for: Proven formats</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Prompt Builder -->
+        <section id="builderSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Build Your Prompt</h2>
+                
+                <!-- Step 1: Topic -->
+                <div id="step1" class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-700 mb-3">What do you want to create a prompt for?</label>
+                    <input type="text" id="topic" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="e.g., writing blog posts, analyzing data, creating social media content">
+                </div>
+
+                <!-- Step 2: Goal -->
+                <div id="step2" class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-700 mb-3">What's your specific goal?</label>
+                    <textarea id="goal" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" rows="3" placeholder="Describe what you want to achieve..."></textarea>
+                </div>
+
+                <!-- Step 3: Context (varies by method) -->
+                <div id="step3" class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-700 mb-3" id="contextLabel">Provide context</label>
+                    <textarea id="context" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" rows="5" id="contextArea" placeholder=""></textarea>
+                </div>
+
+                <!-- Step 4: Prompt Length -->
+                <div id="step4" class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-700 mb-3">How detailed should the coaching be?</label>
+                    <select id="length" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+                        <option value="concise">Concise (500-800 words)</option>
+                        <option value="detailed" selected>Detailed (1000-1500 words)</option>
+                        <option value="comprehensive">Comprehensive (1500-2000 words)</option>
+                    </select>
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="generatePrompt()" class="w-full gradient-bg text-white py-4 rounded-lg text-lg font-semibold hover:opacity-90 transition">
+                    ✨ Generate Your Expert Prompt
+                </button>
+            </div>
+        </section>
+
+        <!-- Generated Prompt Output -->
+        <section id="outputSection" class="hidden mt-12">
+            <div class="bg-white rounded-xl shadow-xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Your Generated Prompt</h2>
+                    <button onclick="copyPrompt()" class="copy-btn bg-purple-600 text-white px-6 py-2 rounded-lg font-medium">
+                        📋 Copy Prompt
+                    </button>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 border-2 border-gray-200">
+                    <pre id="generatedPrompt" class="whitespace-pre-wrap text-gray-800 font-mono text-sm leading-relaxed"></pre>
+                </div>
+
+                <div class="mt-6 bg-purple-50 border-l-4 border-purple-600 p-4 rounded">
+                    <p class="text-purple-900 font-medium">💡 Pro Tip: Copy this prompt and use it with your AI tool. Save it to your prompt library for future use!</p>
+                </div>
+
+                <button onclick="reset()" class="mt-6 w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
+                    Create Another Prompt
+                </button>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="mt-16 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">How Expert Prompts Work</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="phase-badge w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">1</div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Context Gathering</h3>
+                    <p class="text-gray-600">AI asks clarifying questions one at a time to understand exactly what you need, disclaiming uncertainty.</p>
+                </div>
+                <div class="text-center">
+                    <div class="phase-badge w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">2</div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Expert Coordination</h3>
+                    <p class="text-gray-600">Complex tasks are decomposed and assigned to specialized expert personas who verify each other's work.</p>
+                </div>
+                <div class="text-center">
+                    <div class="phase-badge w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">3</div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Verified Action Plan</h3>
+                    <p class="text-gray-600">Creates a comprehensive, fact-checked roadmap with disclaimers for uncertain areas and clear success criteria.</p>
+                </div>
+                <div class="text-center">
+                    <div class="phase-badge w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">4</div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Day-by-Day Coaching</h3>
+                    <p class="text-gray-600">Guides you through implementation with verified advice, always disclaiming when uncertain and adapting to feedback.</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-white rounded-lg p-6 border-2 border-purple-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">🛡️ Built-In Safeguards Against Hallucinations</h3>
+                <ul class="text-gray-700 space-y-2">
+                    <li><strong>Fresh Eyes Verification:</strong> Different experts create and validate solutions - no self-checking</li>
+                    <li><strong>Disclaimer When Uncertain:</strong> AI explicitly states when information is incomplete or unverified</li>
+                    <li><strong>Task Decomposition:</strong> Complex requests broken into verifiable subtasks</li>
+                    <li><strong>Source References:</strong> Encourages citing specific data sources instead of guessing</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="opacity-75">Build and learn at the same time. Use AI smarter than 99% of people.</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedMethod = '';
+        
+        function selectMethod(method) {
+            selectedMethod = method;
+            document.getElementById('methodSection').classList.add('fade-in');
+            document.getElementById('builderSection').classList.remove('hidden');
+            document.getElementById('builderSection').classList.add('fade-in');
+            
+            // Update context placeholder based on method
+            const contextArea = document.getElementById('context');
+            const contextLabel = document.getElementById('contextLabel');
+            
+            switch(method) {
+                case 'detailed':
+                    contextLabel.textContent = 'Describe every detail you want included';
+                    contextArea.placeholder = 'Be extremely specific about:\n- Tone and style\n- Structure and format\n- Specific elements to include\n- What to avoid\n- Any examples or references';
+                    break;
+                case 'guide':
+                    contextLabel.textContent = 'What should AI guide you through?';
+                    contextArea.placeholder = 'Describe the process or skill you want step-by-step guidance on...';
+                    break;
+                case 'expert':
+                    contextLabel.textContent = 'Paste expert information or source material';
+                    contextArea.placeholder = 'Paste articles, documentation, expert advice, or any source material that AI should learn from...';
+                    break;
+                case 'emulate':
+                    contextLabel.textContent = 'Paste the example you want to replicate';
+                    contextArea.placeholder = 'Paste an example of content/output you love, and describe what aspects you want to replicate...';
+                    break;
+            }
+            
+            // Smooth scroll to builder
+            document.getElementById('builderSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function generatePrompt() {
+            const topic = document.getElementById('topic').value;
+            const goal = document.getElementById('goal').value;
+            const context = document.getElementById('context').value;
+            const length = document.getElementById('length').value;
+            
+            if (!topic || !goal || !context) {
+                alert('Please fill in all fields to generate your prompt!');
+                return;
+            }
+            
+            let lengthDesc = 'detailed';
+            if (length === 'concise') lengthDesc = '500-800 word';
+            if (length === 'detailed') lengthDesc = '1000-1500 word';
+            if (length === 'comprehensive') lengthDesc = '1500-2000 word';
+            
+            // Build role based on method
+            let role = '';
+            let expertApproach = '';
+            
+            switch(selectedMethod) {
+                case 'detailed':
+                    role = `You are an expert ${topic} specialist who provides extremely detailed, personalized guidance with zero guesswork. You verify all claims, disclaim uncertainty, and follow instructions precisely.`;
+                    expertApproach = `If complex tasks arise, decompose them into subtasks. Consult specialized experts (e.g., Expert Writer, Expert Analyst, Expert Python) as needed for verification. Use "fresh eyes" - never let the same expert both create and validate solutions.`;
+                    break;
+                case 'guide':
+                    role = `You are an expert coach and educator specializing in ${topic}. You create verified, step-by-step guidance based on best practices, always disclaiming when information is uncertain or incomplete.`;
+                    expertApproach = `Break complex processes into logical subtasks. For technical or specialized areas, summon relevant experts (Expert Educator, Expert Researcher) to ensure accuracy. Cross-verify all guidance with independent expert reviews.`;
+                    break;
+                case 'expert':
+                    role = `You are now a domain expert in ${topic}, having deeply studied the provided source material. You base all responses strictly on this verified information, disclaiming when data is insufficient.`;
+                    expertApproach = `When applying this knowledge to user tasks, decompose complex requests. If calculations or technical work is needed, coordinate with Expert Python or Expert Analyst. Always verify outputs against source material.`;
+                    break;
+                case 'emulate':
+                    role = `You are an expert at analyzing and replicating successful examples in ${topic}. You verify quality patterns, disclaim uncertain elements, and coach users to achieve similar results.`;
+                    expertApproach = `Break down the example into analyzable components. Summon Expert Writer/Designer/Analyst to verify which elements make it successful. Use independent experts to validate your replication strategy.`;
+                    break;
+            }
+            
+            const prompt = `[ROLE]
+${role}
+
+Context
+${goal}
+
+${context ? `Additional Context/Requirements:\n${context}\n` : ''}
+
+Instructions
+
+Phase 1 - Context Gathering:
+${expertApproach}
+
+* Ask clarifying questions ONE AT A TIME to gather critical details
+* Identify any complex subtasks that need expert coordination
+* Verify understanding before proceeding
+* Disclaim if any requirements are ambiguous or uncertain
+* If factual data is needed, ask user for specific sources rather than guessing
+
+Phase 2 - Task Decomposition & Verification:
+* Break the overall goal into logical, manageable subtasks
+* For each complex subtask, specify which expert persona to consult:
+  - Expert Python: For code generation, calculations, data analysis
+  - Expert Writer: For content creation, editing, style refinement
+  - Expert Researcher: For fact-checking and information gathering
+  - Expert [Domain]: For specialized domain knowledge
+* Use "fresh eyes" - assign different experts for creation vs. validation
+* Each expert should receive complete instructions (they have no prior memory)
+* Verify all outputs for accuracy and disclaim uncertainties
+
+Phase 3 - Action Plan Creation:
+* Create a ${lengthDesc} action plan based on verified context
+* Structure the plan with:
+  - Clear, sequential steps
+  - Success criteria for each step
+  - Potential obstacles and solutions
+  - Timeline and milestones
+* Include disclaimers where information is incomplete
+* Reference any data sources used
+
+Phase 4 - Day-by-Day Coaching:
+* Guide the user one day at a time through the action plan
+* Each day provide:
+  - Specific action steps
+  - Rationale (why these steps matter)
+  - Common pitfalls to avoid
+  - Quick wins and progress markers
+* IMPORTANT: If you're uncertain about any advice, explicitly disclaim it
+* Encourage user to verify critical steps independently
+* Adapt based on feedback and results
+* Celebrate progress authentically
+
+Constraints
+* Minimize hallucinations: Never guess facts - disclaim uncertainty or ask for data
+* Keep interactions minimal unless clarification is critical for accuracy
+* Use expert personas strategically, not for every minor task
+* For complex calculations/code, always use Expert Python and show your work
+* Aim for verifiable, actionable guidance over generic advice
+* Maximum ${lengthDesc} responses unless user requests more detail
+
+Output Format
+* Phase 1: One clarifying question at a time in conversational tone
+* Phase 2: Structured breakdown with expert assignments if needed
+* Phase 3: Formatted action plan (use headings, bullets as appropriate)
+* Phase 4: Daily guidance in clear, scannable format with disclaimers when uncertain
+
+Examples
+${selectedMethod === 'emulate' ? '[The example provided by the user serves as the reference point for quality and style]' : '[Include specific examples from user context if provided]'}
+
+---
+
+BEGIN with Phase 1: Ask your first clarifying question to ensure the most accurate, verified guidance possible.`;
+            
+            document.getElementById('generatedPrompt').textContent = prompt;
+            document.getElementById('outputSection').classList.remove('hidden');
+            document.getElementById('outputSection').classList.add('fade-in');
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function copyPrompt() {
+            const prompt = document.getElementById('generatedPrompt').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+        
+        function reset() {
+            document.getElementById('topic').value = '';
+            document.getElementById('goal').value = '';
+            document.getElementById('context').value = '';
+            document.getElementById('builderSection').classList.add('hidden');
+            document.getElementById('outputSection').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
